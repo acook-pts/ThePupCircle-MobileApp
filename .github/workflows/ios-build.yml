@@ -1,0 +1,112 @@
+name: iOS Build
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PROJECT_PATH: 'ThePupCircle.MobileApp.csproj'
+  CONFIGURATION: 'Release'
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Install .NET MAUI workload
+      run: dotnet workload install maui
+      
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+        
+    - name: Import Code Signing Certificate
+      if: github.ref == 'refs/heads/main'
+      uses: apple-actions/import-codesign-certs@v2
+      with:
+        p12-file-base64: ${{ secrets.IOS_CERTIFICATE_P12_BASE64 }}
+        p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+        
+    - name: Download Provisioning Profile
+      if: github.ref == 'refs/heads/main'
+      run: |
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        echo "${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+        
+    - name: Build iOS App (Debug)
+      if: github.event_name == 'pull_request'
+      run: |
+        dotnet build ${{ env.PROJECT_PATH }} \
+          -c Debug \
+          -f net10.0-ios \
+          /p:RuntimeIdentifier=ios-arm64
+          
+    - name: Build iOS App (Release - Simulator)
+      if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+      run: |
+        dotnet build ${{ env.PROJECT_PATH }} \
+          -c ${{ env.CONFIGURATION }} \
+          -f net10.0-ios \
+          /p:RuntimeIdentifier=iossimulator-x64
+          
+    - name: Build iOS App (Release - Device/App Store)
+      if: github.ref == 'refs/heads/main'
+      run: |
+        dotnet publish ${{ env.PROJECT_PATH }} \
+          -c ${{ env.CONFIGURATION }} \
+          -f net10.0-ios \
+          /p:RuntimeIdentifier=ios-arm64 \
+          /p:ArchiveOnBuild=true \
+          /p:CodesignKey="${{ secrets.IOS_CODESIGN_KEY }}" \
+          /p:CodesignProvision="${{ secrets.IOS_PROVISIONING_PROFILE_NAME }}" \
+          /p:CodesignEntitlements="Platforms/iOS/Entitlements.plist"
+          
+    - name: Upload iOS App (Simulator)
+      if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref != 'refs/heads/main')
+      uses: actions/upload-artifact@v4
+      with:
+        name: ios-app-simulator-${{ github.sha }}
+        path: |
+          **/bin/${{ env.CONFIGURATION }}/net10.0-ios/iossimulator-x64/*.app
+          **/bin/Debug/net10.0-ios/**/*.app
+        retention-days: 30
+        
+    - name: Upload iOS IPA (Production)
+      if: github.ref == 'refs/heads/main'
+      uses: actions/upload-artifact@v4
+      with:
+        name: ios-ipa-production-${{ github.sha }}
+        path: |
+          **/bin/${{ env.CONFIGURATION }}/net10.0-ios/ios-arm64/publish/*.ipa
+        retention-days: 90
+        
+    - name: Create Release Notes
+      if: github.ref == 'refs/heads/main'
+      run: |
+        echo "# iOS Build - Production" > release-notes.txt
+        echo "Build Date: $(date '+%Y-%m-%d %H:%M:%S')" >> release-notes.txt
+        echo "Commit: ${{ github.sha }}" >> release-notes.txt
+        echo "Branch: ${{ github.ref_name }}" >> release-notes.txt
+        
+    - name: Upload Release Notes
+      if: github.ref == 'refs/heads/main'
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-notes-ios
+        path: release-notes.txt

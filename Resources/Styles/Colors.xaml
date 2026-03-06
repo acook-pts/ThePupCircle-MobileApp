@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
+
+    <!-- ThePupCircle Brand Colors - Rebrand 2024 -->
+    
+    <!-- Primary Brand Colors (Park Grass - Grounded, organic, calm) -->
+    <Color x:Key="Primary">#4A6741</Color>
+    <Color x:Key="PrimaryLight">#5A7851</Color>
+    <Color x:Key="PrimaryDark">#3A5331</Color>
+    <Color x:Key="PrimaryDarker">#2A4321</Color>
+    <Color x:Key="PrimaryDarkText">#2D3A29</Color>
+    
+    <!-- Secondary Colors (Golden Retriever - Warm, energetic, friendly) -->
+    <Color x:Key="Secondary">#E6B34B</Color>
+    <Color x:Key="SecondaryLight">#EDC36B</Color>
+    <Color x:Key="SecondaryDark">#D9A33B</Color>
+    <Color x:Key="SecondaryDarkText">#5A6756</Color>
+    
+    <!-- Accent Colors (Tennis Ball - High visibility for CTAs) -->
+    <Color x:Key="Tertiary">#D4E157</Color>
+    <Color x:Key="TertiaryLight">#DCE777</Color>
+    <Color x:Key="TertiaryDark">#C4D147</Color>
+    
+    <!-- Success/Error Colors -->
+    <Color x:Key="Success">#4A6741</Color>
+    <Color x:Key="SuccessLight">#5A7851</Color>
+    <Color x:Key="SuccessDark">#3A5331</Color>
+    <Color x:Key="Danger">#E85D4B</Color>
+    <Color x:Key="DangerLight">#ED7D6B</Color>
+    <Color x:Key="DangerDark">#D94D3B</Color>
+    
+    <!-- Background Colors (Canvas White - Soft and natural) -->
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Background">#F9F7F2</Color>
+    <Color x:Key="Cream">#F5F3E8</Color>
+    <Color x:Key="WarmWhite">#FDFCF7</Color>
+    <Color x:Key="Parchment">#F7F5EC</Color>
+    <Color x:Key="SepiaLight">#FAF8F0</Color>
+    
+    <!-- Neutral/Text Colors (Earthy and readable) -->
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="TextPrimary">#2D3A29</Color>
+    <Color x:Key="TextSecondary">#5A6756</Color>
+    <Color x:Key="TextMuted">#8A9487</Color>
+    <Color x:Key="GrayLight">#E8E6DC</Color>
+    <Color x:Key="Gray">#D4D2C8</Color>
+    
+    <!-- Legacy Gray Scale (for compatibility) -->
+    <Color x:Key="Gray100">#E8E6DC</Color>
+    <Color x:Key="Gray200">#D4D2C8</Color>
+    <Color x:Key="Gray300">#8A9487</Color>
+    <Color x:Key="Gray400">#5A6756</Color>
+    <Color x:Key="Gray500">#3A5331</Color>
+    <Color x:Key="Gray600">#2D3A29</Color>
+    <Color x:Key="Gray900">#2A4321</Color>
+    <Color x:Key="Gray950">#1A2A19</Color>
+
+    <!-- Solid Color Brushes -->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
+    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource Background}"/>
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource Success}"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource Danger}"/>
+
+    <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
+    <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
+    <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>
+    <SolidColorBrush x:Key="Gray400Brush" Color="{StaticResource Gray400}"/>
+    <SolidColorBrush x:Key="Gray500Brush" Color="{StaticResource Gray500}"/>
+    <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
+    <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
+    <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+</ResourceDictionary>

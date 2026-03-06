@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ThePupCircle.MobileApp.MainPage"
+             BackgroundColor="{StaticResource Background}">
+
+    <Grid>
+        <!-- Loading Indicator -->
+        <VerticalStackLayout x:Name="loadingIndicator"
+                            IsVisible="True"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            Spacing="20">
+            <ActivityIndicator IsRunning="True"
+                              Color="{StaticResource Primary}"
+                              HeightRequest="50"
+                              WidthRequest="50" />
+            <Label x:Name="loadingLabel"
+                   Text="Loading..."
+                   TextColor="{StaticResource TextSecondary}"
+                   FontSize="14"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- WebView -->
+        <WebView x:Name="webView"
+                 VerticalOptions="FillAndExpand"
+                 HorizontalOptions="FillAndExpand"
+                 IsVisible="False"
+                 BackgroundColor="{StaticResource Background}"
+                 Navigating="OnWebViewNavigating"
+                 Navigated="OnWebViewNavigated" />
+    </Grid>
+
+</ContentPage>

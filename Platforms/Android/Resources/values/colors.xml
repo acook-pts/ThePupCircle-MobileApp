@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ThePupCircle Brand Colors - Rebrand 2024 -->
+    <color name="colorPrimary">#4A6741</color>
+    <color name="colorPrimaryDark">#3A5331</color>
+    <color name="colorAccent">#E6B34B</color>
+</resources>

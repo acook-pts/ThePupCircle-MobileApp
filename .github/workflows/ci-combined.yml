@@ -1,0 +1,43 @@
+name: CI - Build All Platforms
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PROJECT_PATH: 'ThePupCircle.MobileApp.csproj'
+
+jobs:
+  # Code quality and testing
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+      
+    - name: Check formatting
+      run: dotnet format ${{ env.PROJECT_PATH }} --verify-no-changes --verbosity diagnostic
+      continue-on-error: true
+
+  # Trigger platform-specific builds
+  trigger-android:
+    needs: code-quality
+    uses: ./.github/workflows/android-build.yml
+    secrets: inherit
+    
+  trigger-ios:
+    needs: code-quality
+    uses: ./.github/workflows/ios-build.yml
+    secrets: inherit
