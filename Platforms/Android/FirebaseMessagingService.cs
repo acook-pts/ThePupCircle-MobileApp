@@ -29,11 +29,12 @@ public class PupCircleFirebaseMessagingService : FirebaseMessagingService
     {
         // Firebase auto-displays notification-payload messages when the app is in the background.
         // This handles foreground display and data-only messages.
+        var data  = (IReadOnlyDictionary<string, string>)message.Data;
         var title = message.GetNotification()?.Title
-                    ?? message.Data.GetValueOrDefault("title", "ThePupCircle");
+                    ?? data.GetValueOrDefault("title", "ThePupCircle");
         var body  = message.GetNotification()?.Body
-                    ?? message.Data.GetValueOrDefault("body", string.Empty);
-        var url   = message.Data.GetValueOrDefault("url", string.Empty);
+                    ?? data.GetValueOrDefault("body", string.Empty);
+        var url   = data.GetValueOrDefault("url", string.Empty);
 
         if (string.IsNullOrEmpty(body)) return;
 
@@ -61,7 +62,7 @@ public class PupCircleFirebaseMessagingService : FirebaseMessagingService
             builder.SetContentIntent(pending);
         }
 
-        NotificationManagerCompat.From(this).Notify(Environment.TickCount, builder.Build());
+        NotificationManagerCompat.From(this).Notify(System.Environment.TickCount, builder.Build());
     }
 
     private void EnsureChannel()

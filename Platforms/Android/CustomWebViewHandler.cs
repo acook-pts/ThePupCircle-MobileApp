@@ -133,7 +133,6 @@ public class CustomWebViewHandler : WebViewHandler
 /// The website calls window.NativeApp.showNotification(title, body, url)
 /// to trigger a native system notification.
 /// </summary>
-[JavascriptInterface]
 [global::Android.Runtime.Register("ThePupCircleNativeBridge")]
 public class NativeJsBridge : Java.Lang.Object
 {
@@ -159,7 +158,7 @@ public class NativeJsBridge : Java.Lang.Object
 
         if (!string.IsNullOrEmpty(url))
         {
-            var intent = new Intent(Intent.ActionView, Android.Net.Uri.Parse(url));
+            var intent = new Intent(Intent.ActionView, global::Android.Net.Uri.Parse(url));
             intent.AddFlags(ActivityFlags.NewTask);
             var pending = PendingIntent.GetActivity(
                 _context, 0, intent,
@@ -167,7 +166,7 @@ public class NativeJsBridge : Java.Lang.Object
             builder.SetContentIntent(pending);
         }
 
-        NotificationManagerCompat.From(_context).Notify(Environment.TickCount, builder.Build());
+        NotificationManagerCompat.From(_context).Notify(System.Environment.TickCount, builder.Build());
     }
 
     private void EnsureNotificationChannel()
