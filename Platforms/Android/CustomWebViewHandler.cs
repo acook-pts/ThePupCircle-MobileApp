@@ -1,4 +1,9 @@
+using Android.App;
+using Android.Content;
+using Android.OS;
 using Android.Webkit;
+using AndroidX.Core.App;
+using Java.Interop;
 using Microsoft.Maui.Handlers;
 
 namespace ThePupCircle.MobileApp.Platforms.Android;
@@ -51,9 +56,11 @@ public class CustomWebViewHandler : WebViewHandler
         webView.Settings.UseWideViewPort = true;
         webView.Settings.LoadWithOverviewMode = true;
 
-        // Enable app cache
-        webView.Settings.SetAppCacheEnabled(true);
-        webView.Settings.CacheMode = CacheModes.Default;
+        // Use cached resources first, falling back to network — speeds up repeat launches
+        webView.Settings.CacheMode = CacheModes.CacheElseNetwork;
+
+        // Register JS bridge — accessible as window.NativeApp in the WebView
+        webView.AddJavascriptInterface(new NativeJsBridge(webView.Context!), "NativeApp");
 
         // Set user agent
         var userAgent = webView.Settings.UserAgentString;
@@ -118,5 +125,59 @@ public class CustomWebViewHandler : WebViewHandler
             base.OnPageFinished(view, url);
             System.Diagnostics.Debug.WriteLine($"*** PAGE FINISHED: {url}");
         }
+    }
+}
+
+/// <summary>
+/// JavaScript bridge exposed as window.NativeApp in the WebView.
+/// The website calls window.NativeApp.showNotification(title, body, url)
+/// to trigger a native system notification.
+/// </summary>
+[JavascriptInterface]
+[Android.Runtime.Register("ThePupCircleNativeBridge")]
+public class NativeJsBridge : Java.Lang.Object
+{
+    private const string ChannelId = "thepupcircle_notifications";
+    private readonly Context _context;
+
+    public NativeJsBridge(Context context)
+    {
+        _context = context;
+        EnsureNotificationChannel();
+    }
+
+    [JavascriptInterface]
+    [Export("showNotification")]
+    public void ShowNotification(string title, string body, string url)
+    {
+        var builder = new NotificationCompat.Builder(_context, ChannelId)
+            .SetSmallIcon(_context.ApplicationInfo!.Icon)
+            .SetContentTitle(title)
+            .SetContentText(body)
+            .SetAutoCancel(true)
+            .SetPriority(NotificationCompat.PriorityDefault);
+
+        if (!string.IsNullOrEmpty(url))
+        {
+            var intent = new Intent(Intent.ActionView, Android.Net.Uri.Parse(url));
+            intent.AddFlags(ActivityFlags.NewTask);
+            var pending = PendingIntent.GetActivity(
+                _context, 0, intent,
+                PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+            builder.SetContentIntent(pending);
+        }
+
+        NotificationManagerCompat.From(_context).Notify(Environment.TickCount, builder.Build());
+    }
+
+    private void EnsureNotificationChannel()
+    {
+        if (Build.VERSION.SdkInt < BuildVersionCodes.O) return;
+
+        var nm = (NotificationManager)_context.GetSystemService(Context.NotificationService)!;
+        if (nm.GetNotificationChannel(ChannelId) != null) return;
+
+        var channel = new NotificationChannel(ChannelId, "ThePupCircle", NotificationImportance.Default);
+        nm.CreateNotificationChannel(channel);
     }
 }

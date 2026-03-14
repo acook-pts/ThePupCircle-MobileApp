@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using AndroidX.Core.App;
 
 namespace ThePupCircle.MobileApp;
 
@@ -20,6 +21,23 @@ public class MainActivity : MauiAppCompatActivity
 			Android.Views.WindowManagerFlags.HardwareAccelerated);
 
 		ApplyBrandStatusBar();
+		RequestNotificationPermission();
+	}
+
+	private void RequestNotificationPermission()
+	{
+		// POST_NOTIFICATIONS is a runtime permission on Android 13+
+		if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+		{
+			if (ActivityCompat.CheckSelfPermission(this, Android.Manifest.Permission.PostNotifications)
+				!= Android.Content.PM.Permission.Granted)
+			{
+				ActivityCompat.RequestPermissions(
+					this,
+					new[] { Android.Manifest.Permission.PostNotifications },
+					1001);
+			}
+		}
 	}
 
 	private void ApplyBrandStatusBar()
