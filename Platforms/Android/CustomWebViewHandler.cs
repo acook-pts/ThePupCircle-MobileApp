@@ -134,7 +134,7 @@ public class CustomWebViewHandler : WebViewHandler
 /// to trigger a native system notification.
 /// </summary>
 [JavascriptInterface]
-[Android.Runtime.Register("ThePupCircleNativeBridge")]
+[global::Android.Runtime.Register("ThePupCircleNativeBridge")]
 public class NativeJsBridge : Java.Lang.Object
 {
     private const string ChannelId = "thepupcircle_notifications";
