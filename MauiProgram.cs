@@ -4,7 +4,6 @@ using Microsoft.Maui.Handlers;
 
 #if ANDROID
 using ThePupCircle.MobileApp.Platforms.Android;
-using Plugin.Firebase.CloudMessaging;
 #endif
 #if IOS
 using ThePupCircle.MobileApp.Platforms.iOS;
@@ -19,9 +18,6 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
-#if ANDROID
-			.RegisterFirebaseServices()
-#endif
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
