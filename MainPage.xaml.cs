@@ -11,7 +11,6 @@ public partial class MainPage : ContentPage
 		System.Diagnostics.Debug.WriteLine($"=== MainPage Constructor ===");
 		System.Diagnostics.Debug.WriteLine($"BaseUrl: {BaseUrl}");
 		LoadWebsite();
-		_ = InitFcmTokenAsync();
 	}
 
 	private async Task InitFcmTokenAsync()
@@ -26,7 +25,6 @@ public partial class MainPage : ContentPage
 			{
 				_fcmToken = await Plugin.Firebase.CloudMessaging.CrossFirebaseCloudMessaging.Current.GetTokenAsync();
 				Microsoft.Maui.Storage.Preferences.Default.Set("fcm_token", _fcmToken);
-				Microsoft.Maui.Storage.Preferences.Default.Set("fcm_token_registered", false);
 			}
 
 			System.Diagnostics.Debug.WriteLine($"FCM token: {_fcmToken?[..20]}...");
@@ -67,11 +65,7 @@ public partial class MainPage : ContentPage
 	{
 		if (string.IsNullOrEmpty(_fcmToken)) return;
 
-		// Skip if already registered this session
-		var alreadyRegistered = Microsoft.Maui.Storage.Preferences.Default.Get("fcm_token_registered", false);
-		if (alreadyRegistered) return;
-
-		// Inject the token into the page — push-notifications.js picks it up and POSTs to the server
+		// Inject the token into the page — the site listens for nativeFcmTokenReady and POSTs to the server
 		var js = $@"
 			(function() {{
 				window.nativeFcmToken = '{_fcmToken}';
@@ -81,7 +75,6 @@ public partial class MainPage : ContentPage
 		try
 		{
 			await webView.EvaluateJavaScriptAsync(js);
-			Microsoft.Maui.Storage.Preferences.Default.Set("fcm_token_registered", true);
 			System.Diagnostics.Debug.WriteLine("FCM token injected into WebView");
 		}
 		catch (Exception ex)
@@ -108,6 +101,7 @@ public partial class MainPage : ContentPage
 			System.Diagnostics.Debug.WriteLine("Navigation successful - showing WebView");
 			loadingIndicator.IsVisible = false;
 			webView.IsVisible = true;
+			await InitFcmTokenAsync();
 			await InjectFcmTokenAsync();
 		}
 		else
