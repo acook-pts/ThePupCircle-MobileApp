@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Plugin.Firebase;
+using Microsoft.Extensions.Logging;
 using ThePupCircle.MobileApp.Services;
 using Microsoft.Maui.Handlers;
 
@@ -19,7 +18,6 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
-			.UseFirebase(new CrossFirebaseSettings(isCloudMessagingEnabled: true))
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -37,7 +35,6 @@ public static class MauiProgram
 
 		// Register services
 		builder.Services.AddSingleton<IAuthService, AuthService>();
-		builder.Services.AddSingleton<IPushNotificationService, PushNotificationService>();
 		builder.Services.AddSingleton<MainPage>();
 
 #if DEBUG

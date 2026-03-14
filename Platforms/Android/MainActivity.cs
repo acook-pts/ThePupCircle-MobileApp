@@ -20,7 +20,6 @@ public class MainActivity : MauiAppCompatActivity
 			Android.Views.WindowManagerFlags.HardwareAccelerated);
 
 		ApplyBrandStatusBar();
-		RequestNotificationPermission();
 	}
 
 	private void ApplyBrandStatusBar()
@@ -42,12 +41,5 @@ public class MainActivity : MauiAppCompatActivity
 		}
 	}
 
-	private void RequestNotificationPermission()
-	{
-		// Android 13+ (API 33) requires explicit POST_NOTIFICATIONS runtime permission
-		if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
-		{
-			RequestPermissions(new[] { Android.Manifest.Permission.PostNotifications }, 0);
-		}
-	}
+
 }

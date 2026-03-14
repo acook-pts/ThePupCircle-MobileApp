@@ -45,16 +45,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 
-	<!-- Push notifications: allow background fetch and remote notification wakeup -->
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notification</string>
-	</array>
-
-	<!-- Push notification usage (shown in iOS Settings) -->
-	<key>NSUserNotificationUsageDescription</key>
-	<string>ThePupCircle would like to send you notifications about your pups and community updates!</string>
 
 </dict>
 </plist>
