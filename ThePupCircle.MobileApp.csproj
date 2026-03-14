@@ -63,6 +63,15 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+		<PackageReference Include="Plugin.Firebase.CloudMessaging" Version="3.0.4" />
+	</ItemGroup>
+
+	<!-- Firebase config files - replace placeholders with real files from Firebase Console -->
+	<ItemGroup Condition="$(TargetFramework.Contains('android'))">
+		<GoogleServicesJson Include="Platforms\Android\google-services.json" />
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('ios'))">
+		<BundleResource Include="Platforms\iOS\GoogleService-Info.plist" />
 	</ItemGroup>
 
 </Project>

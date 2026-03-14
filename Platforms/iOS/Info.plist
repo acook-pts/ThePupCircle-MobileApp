@@ -38,7 +38,24 @@
 	<string>ThePupCircle needs photo library access to upload photos of your pup!</string>
 	
 	<!-- Allow HTTPS connections -->
-	
+
+	<!-- Status bar: white icons on dark/green background -->
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+
+	<!-- Push notifications: allow background fetch and remote notification wakeup -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+
+	<!-- Push notification usage (shown in iOS Settings) -->
+	<key>NSUserNotificationUsageDescription</key>
+	<string>ThePupCircle would like to send you notifications about your pups and community updates!</string>
+
 </dict>
 </plist>
 
